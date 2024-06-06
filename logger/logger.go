@@ -1,17 +1,19 @@
 package logger
 
 import (
+	"github.com/vv198x/GoWB/config"
 	"log/slog"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
-const logDir = "log"
 const logExt = ".log"
 
-func NewLogger(logLevel slog.Level) *slog.Logger {
-	if err := os.MkdirAll(logDir, 0755); err != nil {
+func NewLogger(logLevel string) *slog.Logger {
+	var level slog.Level
+	if err := os.MkdirAll(config.Get().LogDir, 0755); err != nil {
 		slog.Error("create log directory err: %v", err)
 		return nil
 	}
@@ -22,15 +24,24 @@ func NewLogger(logLevel slog.Level) *slog.Logger {
 		return nil
 	}
 
+	logLevel = strings.ToLower(logLevel)
+	switch logLevel {
+	case "info":
+		level = slog.LevelInfo
+	case "debug":
+		level = slog.LevelDebug
+
+	}
+
 	return slog.New(slog.NewJSONHandler(file, &slog.HandlerOptions{
 		AddSource: true,
-		Level:     logLevel,
+		Level:     level,
 	}))
 }
 
 func getLogFilePath() string {
 	return filepath.Join(
-		logDir,
+		config.Get().LogDir,
 		time.Now().Format("06.01.02")+logExt,
 	)
 }
