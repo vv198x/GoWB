@@ -25,16 +25,19 @@ func NewLogger(logLevel string) *slog.Logger {
 	}
 
 	logLevel = strings.ToLower(logLevel)
+	var addSource bool
 	switch logLevel {
 	case "info":
 		level = slog.LevelInfo
 	case "debug":
 		level = slog.LevelDebug
+		//В режиме отладки показывать путь
+		addSource = !addSource
 
 	}
 
 	return slog.New(slog.NewJSONHandler(file, &slog.HandlerOptions{
-		AddSource: true,
+		AddSource: addSource,
 		Level:     level,
 	}))
 }

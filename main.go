@@ -10,5 +10,7 @@ import (
 
 func main() {
 	slog.SetDefault(logger.NewLogger(config.Get().LogLevel))
-	fmt.Println(tasks.GetAdStatus())
+	fmt.Println(tasks.GetAdStatus([]int{17196078}))
+	fmt.Println(tasks.GetAdBalance(17196078))
+
 }
