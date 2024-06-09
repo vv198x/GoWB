@@ -12,7 +12,9 @@ type AdCampaignRepository struct {
 
 func (repo *AdCampaignRepository) SaveOrUpdate(campaign *models.AdCampaign) error {
 	existingCampaign := &models.AdCampaign{}
-	err := repo.DB.Model(existingCampaign).Where("ad_id = ?", campaign.AdID).Select()
+	err := repo.DB.Model(existingCampaign).
+		Where("ad_id = ?", campaign.AdID).
+		Select()
 	if err != nil && err != pg.ErrNoRows {
 		return err
 	}
@@ -27,6 +29,36 @@ func (repo *AdCampaignRepository) SaveOrUpdate(campaign *models.AdCampaign) erro
 	campaign.CreatedAt = existingCampaign.CreatedAt // Не изменяем дату создания
 	campaign.UpdatedAt = time.Now()                 // Обновляем дату обновления
 
-	_, err = repo.DB.Model(campaign).Where("ad_id = ?", campaign.AdID).Update()
+	//не обновляем если пустые
+	columns := []string{"updated_at"}
+	if campaign.Name != "" {
+		columns = append(columns, "name")
+	}
+	//Убрать
+	if campaign.Budget != existingCampaign.Budget {
+		columns = append(columns, "budget")
+	}
+	if campaign.Type != 0 {
+		columns = append(columns, "type")
+	}
+	if campaign.Status != 0 {
+		columns = append(columns, "status")
+	}
+
+	_, err = repo.DB.Model(campaign).
+		Column(columns...).
+		Where("ad_id = ?", campaign.AdID).
+		Update()
 	return err
+}
+
+func (repo *AdCampaignRepository) GetAllIds() ([]int, error) {
+	var ids []int
+	err := repo.DB.Model(&models.AdCampaign{}).
+		Column("ad_id").
+		Select(&ids)
+	if err != nil {
+		return nil, err
+	}
+	return ids, nil
 }

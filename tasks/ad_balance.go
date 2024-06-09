@@ -2,12 +2,32 @@ package tasks
 
 import (
 	"fmt"
+	"github.com/vv198x/GoWB/config"
+	"github.com/vv198x/GoWB/models"
+	"github.com/vv198x/GoWB/repository"
 	"github.com/vv198x/GoWB/requests"
-	"log/slog"
 	"net/http"
+	"time"
 )
 
 const uriBalance = "https://advert-api.wb.ru/adv/v1/budget"
+
+func UpdateBalance() error {
+	adIds, err := repository.Do().GetAllIds()
+	if err != nil {
+		return fmt.Errorf("db err: %v", err)
+	}
+
+	//запускаю с таймаутом для WB
+	for _, id := range adIds {
+		if err = GetAdBalance(id); err != nil {
+			return fmt.Errorf("getAdBalance err: %v", err)
+		}
+		time.Sleep(time.Duration(config.Get().RetriesTime) * time.Millisecond)
+	}
+
+	return err
+}
 
 func GetAdBalance(adId int) error {
 	var total int
@@ -22,6 +42,12 @@ func GetAdBalance(adId int) error {
 	if err != nil {
 		return fmt.Errorf("failed to scan JSON string: %v", err)
 	}
-	slog.Debug("id balance: ", adId, total)
-	return nil
+
+	if err := repository.Do().SaveOrUpdate(&models.AdCampaign{
+		AdID:   adId,
+		Budget: float64(total),
+	}); err != nil {
+		return fmt.Errorf("write db err ", err, err)
+	}
+	return err
 }

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/vv198x/GoWB/models"
+	"github.com/vv198x/GoWB/repository"
 	"github.com/vv198x/GoWB/requests"
 	"log/slog"
 	"net/http"
@@ -31,6 +32,13 @@ func GetAdList() error {
 		if advert.Status == models.AD_PAUSE || advert.Status == models.AD_RUN {
 			for _, advertList := range advert.AdvertList {
 				advertIds = append(advertIds, advertList.AdvertId)
+				//Записываю или обновляю ид, статусы
+				if err := repository.Do().SaveOrUpdate(&models.AdCampaign{
+					AdID:   advertList.AdvertId,
+					Status: advert.Status,
+				}); err != nil {
+					return fmt.Errorf("write db err ", err, err)
+				}
 			}
 		}
 
@@ -43,7 +51,11 @@ func GetAdList() error {
 	return nil
 }
 
-func GetAdStatus(adIds []int) error {
+func UpdateNames() error {
+	adIds, err := repository.Do().GetAllIds()
+	if err != nil {
+		return fmt.Errorf("db err: %v", err)
+	}
 	jsonData, err := json.Marshal(adIds)
 	if err != nil {
 		return fmt.Errorf("JSON marshal error: %v", err)
@@ -60,12 +72,21 @@ func GetAdStatus(adIds []int) error {
 		return fmt.Errorf("JSON unmarshal error: %v", err)
 	}
 
-	//TODO несколько id передать
 	for _, item := range mapJ {
+		//собираю из мапы данные
 		if name, ok := item["name"].(string); ok {
-			slog.Debug("name: ", adIds, name)
-		} else {
-			return fmt.Errorf("error: mapJ name is not a string")
+			if id, ok := item["advertId"].(float64); ok {
+				if typeAd, ok := item["type"].(float64); ok {
+					//обновляю в базе
+					if err := repository.Do().SaveOrUpdate(&models.AdCampaign{
+						AdID: int(id),
+						Type: int(typeAd),
+						Name: name,
+					}); err != nil {
+						return fmt.Errorf("db error saving or updating campaign: %v", err)
+					}
+				}
+			}
 		}
 	}
 

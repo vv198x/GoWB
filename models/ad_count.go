@@ -2,6 +2,7 @@ package models
 
 import "time"
 
+// Для ответа вб
 type AdCount struct {
 	Adverts []struct {
 		Type       int `json:"type"`
@@ -13,8 +14,3 @@ type AdCount struct {
 		} `json:"advert_list"`
 	} `json:"adverts"`
 }
-
-const (
-	AD_PAUSE = 11
-	AD_RUN   = 9
-)

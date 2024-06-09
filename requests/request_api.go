@@ -59,7 +59,7 @@ func (r *Request) DoWithRetries() (responseData []byte, err error) {
 		if err == nil {
 			return responseData, nil
 		}
-		time.Sleep(time.Duration(config.Get().RetriesTime) * time.Second)
+		time.Sleep(time.Duration(config.Get().RetriesTime) * time.Millisecond)
 	}
 	return nil, fmt.Errorf("after %d attempts, last error: %w", config.Get().Retries, err)
 }
