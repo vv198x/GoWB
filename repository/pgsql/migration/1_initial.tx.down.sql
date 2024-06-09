@@ -1,0 +1,2 @@
+-- 1_initial.tx.down.sql
+-- Удаление таблицы metric_records

@@ -3,6 +3,7 @@ package tasks
 import (
 	"fmt"
 	"github.com/vv198x/GoWB/requests"
+	"log/slog"
 	"net/http"
 )
 
@@ -21,6 +22,6 @@ func GetAdBalance(adId int) error {
 	if err != nil {
 		return fmt.Errorf("failed to scan JSON string: %v", err)
 	}
-	fmt.Println(total)
+	slog.Debug("id balance: ", adId, total)
 	return nil
 }

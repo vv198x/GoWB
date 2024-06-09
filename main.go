@@ -1,16 +1,24 @@
 package main
 
 import (
-	"fmt"
 	"github.com/vv198x/GoWB/config"
 	"github.com/vv198x/GoWB/logger"
-	"github.com/vv198x/GoWB/tasks"
+	"github.com/vv198x/GoWB/repository/pgsql"
+	migrations "github.com/vv198x/GoWB/repository/pgsql/migration"
 	"log/slog"
 )
 
 func main() {
 	slog.SetDefault(logger.NewLogger(config.Get().LogLevel))
-	fmt.Println(tasks.GetAdStatus([]int{17196078}))
-	fmt.Println(tasks.GetAdBalance(17196078))
+
+	//коннект TSL и повтором
+	if err := pgsql.ConnPG(); err != nil {
+		slog.Error("Dont connect pgsql")
+		panic("Dont connect pgsql")
+	}
+	//Логирование если логлевел дебаг
+	pgsql.DebugPG()
+	//Миграция
+	migrations.Start()
 
 }

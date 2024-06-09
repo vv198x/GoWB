@@ -60,11 +60,12 @@ func GetAdStatus(adIds []int) error {
 		return fmt.Errorf("JSON unmarshal error: %v", err)
 	}
 
+	//TODO несколько id передать
 	for _, item := range mapJ {
 		if name, ok := item["name"].(string); ok {
-			fmt.Println("Name:", name)
+			slog.Debug("name: ", adIds, name)
 		} else {
-			fmt.Println("Error: name is not a string")
+			return fmt.Errorf("error: mapJ name is not a string")
 		}
 	}
 
