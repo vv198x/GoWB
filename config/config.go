@@ -48,11 +48,3 @@ func GetHostName() string {
 	}
 	return hostname
 }
-
-func GetHostIp() string {
-	var ip string
-	if host, _, err := net.SplitHostPort(c.AddrPg); err == nil {
-		ip = host
-	}
-	return ip
-}

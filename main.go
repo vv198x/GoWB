@@ -3,6 +3,8 @@ package main
 import (
 	"github.com/vv198x/GoWB/config"
 	"github.com/vv198x/GoWB/logger"
+	"github.com/vv198x/GoWB/models"
+	"github.com/vv198x/GoWB/repository"
 	"github.com/vv198x/GoWB/repository/pgsql"
 	migrations "github.com/vv198x/GoWB/repository/pgsql/migration"
 	"log/slog"
@@ -20,5 +22,9 @@ func main() {
 	pgsql.DebugPG()
 	//Миграция
 	migrations.Start()
+	//Инициализация репозитория
+	repository.R = &repository.AdCampaignRepository{DB: pgsql.DB}
+
+	repository.Do().SaveOrUpdate(&models.AdCampaign{AdID: 1})
 
 }
