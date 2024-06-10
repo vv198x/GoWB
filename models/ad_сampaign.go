@@ -5,12 +5,20 @@ import (
 )
 
 type AdCampaign struct {
+	AdID        int       `pg:"ad_id,pk"`
+	Name        string    `pg:"name"`
+	Budget      float64   `pg:"budget"`
+	Status      int       `pg:"status"`
+	Type        int       `pg:"type"`
+	DoNotRefill bool      `pg:"do_not_refill"`
+	CreatedAt   time.Time `pg:"created_at,default:now()"`
+	UpdatedAt   time.Time `pg:"updated_at"`
+}
+
+// отдельно от таблицы
+type Balance struct {
 	AdID      int       `pg:"ad_id,pk"`
-	Name      string    `pg:"name"`
-	Budget    float64   `pg:"budget"`
-	Status    int       `pg:"status"`
-	Type      int       `pg:"type"`
-	CreatedAt time.Time `pg:"created_at,default:now()"`
+	Balance   float64   `pg:"balance"`
 	UpdatedAt time.Time `pg:"updated_at"`
 }
 

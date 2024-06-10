@@ -43,9 +43,9 @@ func GetAdBalance(adId int) error {
 		return fmt.Errorf("failed to scan JSON string: %v", err)
 	}
 
-	if err := repository.Do().SaveOrUpdate(&models.AdCampaign{
-		AdID:   adId,
-		Budget: float64(total),
+	if err := repository.Do().SaveOrUpdateBalance(&models.Balance{
+		AdID:    adId,
+		Balance: float64(total),
 	}); err != nil {
 		return fmt.Errorf("write db err ", err, err)
 	}

@@ -10,7 +10,3 @@ CREATE TABLE IF NOT EXISTS "ad_campaigns" (
                                               "created_at" TIMESTAMPTZ DEFAULT now(),
                                               "updated_at" TIMESTAMPTZ DEFAULT now()
 );
-
--- Добавление индексов
-CREATE INDEX IF NOT EXISTS idx_ad_campaigns_status ON "ad_campaigns" ("status");
-CREATE INDEX IF NOT EXISTS idx_ad_campaigns_type ON "ad_campaigns" ("type");

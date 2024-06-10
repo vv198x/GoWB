@@ -34,10 +34,7 @@ func (repo *AdCampaignRepository) SaveOrUpdate(campaign *models.AdCampaign) erro
 	if campaign.Name != "" {
 		columns = append(columns, "name")
 	}
-	//Убрать
-	if campaign.Budget != existingCampaign.Budget {
-		columns = append(columns, "budget")
-	}
+	// budget не обновляем
 	if campaign.Type != 0 {
 		columns = append(columns, "type")
 	}
@@ -49,6 +46,16 @@ func (repo *AdCampaignRepository) SaveOrUpdate(campaign *models.AdCampaign) erro
 		Column(columns...).
 		Where("ad_id = ?", campaign.AdID).
 		Update()
+	return err
+}
+
+func (repo *AdCampaignRepository) SaveOrUpdateBalance(balance *models.Balance) error {
+	// Устанавливаем текущее время для updated_at перед выполнением запроса
+	balance.UpdatedAt = time.Now()
+	_, err := repo.DB.Model(balance).
+		OnConflict("(ad_id) DO UPDATE").
+		Set("balance = EXCLUDED.balance, updated_at = EXCLUDED.updated_at").
+		Insert()
 	return err
 }
 
