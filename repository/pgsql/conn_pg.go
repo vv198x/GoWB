@@ -38,7 +38,7 @@ func connRetry(opt pg.Options) error {
 		DB = pg.Connect(&opt)
 
 		// ping pg
-		if _, err := DB.Exec("SELECT 2+2"); err == nil {
+		if _, err := DB.Exec("SET TIME ZONE 'Europe/Moscow'"); err == nil {
 			return nil
 
 			// retry

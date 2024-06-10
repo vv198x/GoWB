@@ -28,21 +28,19 @@ func main() {
 
 	//Задачи для планировщика
 	//записать все id и статусы
-	//fmt.Println(tasks.GetAdList())
+	fmt.Println(tasks.GetAdList())
 	//обновить имена и тип - раз в день
 	//fmt.Println(tasks.UpdateNames())
 	//обновить бюджеты
-	fmt.Println(tasks.UpdateBalance())
+	if err := tasks.UpdateBalance(); err == nil {
+		//Если ошибка UpdateBalance не пополнять
+		fmt.Println(tasks.ReFillBalance())
+		//Обновить бюджеты
+		fmt.Println(tasks.UpdateBalance())
+	}
 
 }
 
 /*
-	Если ошибка UpdateBalance не пополнять
-
-	- Если баланс меньше 500 пополнить на 2000 запрос
-	- Не стоит DoNotRefill запрос
-	- Если дневное пополнение меньше бюджета запрос
-
-- Запустить компании не помеченные DoNotRefill = false
-
+TODO - Запустить компании не помеченные DoNotRefill = false
 */

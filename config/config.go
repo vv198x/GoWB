@@ -18,6 +18,7 @@ type Config struct {
 	ApiKeyAD    string `env:"KEY_AD" env-default:"KEY" env-description:"PostgreSQL password"`
 	Retries     int    `env:"RETRIES" env-default:"3" env-description:"Retries"`
 	RetriesTime int    `env:"RET_TIME" env-default:"500" env-description:"Retries time milliseconds"`
+	Amount      int    `env:"AMOUNT" env-default:"2000" env-description:"Replenishment amount"`
 }
 
 var c Config
