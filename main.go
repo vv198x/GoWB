@@ -39,8 +39,11 @@ func main() {
 		fmt.Println(tasks.UpdateBalance())
 	}
 
+	//go Scheduler(task, 5*time.Second)
+	select {}
 }
 
 /*
 TODO - Запустить компании не помеченные DoNotRefill = false
+TODO - Прокинуть контекст до реквеста и до базы DB.Model(entry).Context().Insert()
 */
