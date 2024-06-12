@@ -1,0 +1,16 @@
+version: '3.9'
+services:
+  wbgo:
+    hostname: ${HOSTNAME}
+    build: .
+    environment:
+      - LOGGER=info
+      - MIGRATION=
+      - ADDR_PG=${ADDR_PGSQL}
+      - DB_PG=wbgo
+      - USER_PG=pgsql
+      - PASS_PG=${PASS_PGSQL}
+      - KEY_AD=${AD_KEY}
+    restart: always
+    volumes:
+      - ./log:/log
