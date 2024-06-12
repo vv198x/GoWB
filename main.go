@@ -1,14 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"github.com/vv198x/GoWB/config"
 	"github.com/vv198x/GoWB/logger"
 	"github.com/vv198x/GoWB/repository"
 	"github.com/vv198x/GoWB/repository/pgsql"
 	migrations "github.com/vv198x/GoWB/repository/pgsql/migration"
+	"github.com/vv198x/GoWB/scheduler"
 	"github.com/vv198x/GoWB/tasks"
 	"log/slog"
+	"time"
 )
 
 func main() {
@@ -19,31 +20,15 @@ func main() {
 		slog.Error("Dont connect pgsql")
 		panic("Dont connect pgsql")
 	}
-	//Логирование если логлевел дебаг
+	//логирование запросов если логлевел дебаг
 	pgsql.DebugPG()
-	//Миграция
+	//миграция
 	migrations.Start()
-	//Инициализация репозитория
+	//инициализация репозитория
 	repository.R = &repository.AdCampaignRepository{DB: pgsql.DB}
 
-	//Задачи для планировщика
-	//записать все id и статусы
-	fmt.Println(tasks.GetAdList())
-	//обновить имена и тип - раз в день
-	//fmt.Println(tasks.UpdateNames())
-	//обновить бюджеты
-	if err := tasks.UpdateBalance(); err == nil {
-		//Если ошибка UpdateBalance не пополнять
-		fmt.Println(tasks.ReFillBalance())
-		//Обновить бюджеты
-		fmt.Println(tasks.UpdateBalance())
-	}
+	go scheduler.Add(tasks.AutoReFill, 1*time.Hour)
+	go scheduler.Add(tasks.UpdateNames, 24*time.Hour)
 
-	//go Scheduler(task, 5*time.Second)
 	select {}
 }
-
-/*
-TODO - Запустить компании не помеченные DoNotRefill = false
-TODO - Прокинуть контекст до реквеста и до базы DB.Model(entry).Context().Insert()
-*/

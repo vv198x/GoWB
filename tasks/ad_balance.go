@@ -1,6 +1,7 @@
 package tasks
 
 import (
+	"context"
 	"fmt"
 	"github.com/vv198x/GoWB/config"
 	"github.com/vv198x/GoWB/models"
@@ -12,15 +13,15 @@ import (
 
 const uriBalance = "https://advert-api.wb.ru/adv/v1/budget"
 
-func UpdateBalance() error {
-	adIds, err := repository.Do().GetAllIds()
+func UpdateBalance(ctx context.Context) error {
+	adIds, err := repository.Do().GetAllIds(ctx)
 	if err != nil {
 		return fmt.Errorf("db err: %v", err)
 	}
 
 	//запускаю с таймаутом для WB
 	for _, id := range adIds {
-		if err = GetAdBalance(id); err != nil {
+		if err = GetAdBalance(ctx, id); err != nil {
 			return fmt.Errorf("getAdBalance err: %v", err)
 		}
 		time.Sleep(time.Duration(config.Get().RetriesTime) * time.Millisecond)
@@ -29,10 +30,10 @@ func UpdateBalance() error {
 	return err
 }
 
-func GetAdBalance(adId int) error {
+func GetAdBalance(ctx context.Context, adId int) error {
 	var total int
 	finalURL := fmt.Sprintf("%s?id=%d", uriBalance, adId)
-	data, err := requests.New(http.MethodGet, finalURL, nil).DoWithRetries()
+	data, err := requests.New(http.MethodGet, finalURL, nil).DoWithRetries(ctx)
 	if err != nil {
 		return fmt.Errorf("request ad status error: %v", err)
 	}
@@ -43,7 +44,7 @@ func GetAdBalance(adId int) error {
 		return fmt.Errorf("failed to scan JSON string: %v", err)
 	}
 
-	if err = repository.Do().SaveOrUpdateBalance(&models.Balance{
+	if err = repository.Do().SaveOrUpdateBalance(ctx, &models.Balance{
 		AdID:    adId,
 		Balance: float64(total),
 	}); err != nil {

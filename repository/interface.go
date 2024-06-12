@@ -1,13 +1,16 @@
 package repository
 
-import "github.com/vv198x/GoWB/models"
+import (
+	"context"
+	"github.com/vv198x/GoWB/models"
+)
 
 type AdCampaign interface {
-	SaveOrUpdate(campaign *models.AdCampaign) error
-	GetAllIds() ([]int, error)
-	SaveOrUpdateBalance(Balance *models.Balance) error
-	GetReFillIds() ([]int, error)
-	AddHistoryAmount(entry *models.History) error
+	SaveOrUpdate(context.Context, *models.AdCampaign) error
+	GetAllIds(context.Context) ([]int, error)
+	SaveOrUpdateBalance(context.Context, *models.Balance) error
+	GetReFillIds(context.Context) ([]int, error)
+	AddHistoryAmount(context.Context, *models.History) error
 }
 
 var R AdCampaign

@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"github.com/go-pg/pg/v10"
 	"github.com/vv198x/GoWB/models"
 	"time"
@@ -10,9 +11,10 @@ type AdCampaignRepository struct {
 	DB *pg.DB
 }
 
-func (repo *AdCampaignRepository) SaveOrUpdate(campaign *models.AdCampaign) error {
+func (repo *AdCampaignRepository) SaveOrUpdate(ctx context.Context, campaign *models.AdCampaign) error {
 	existingCampaign := &models.AdCampaign{}
 	err := repo.DB.Model(existingCampaign).
+		Context(ctx).
 		Where("ad_id = ?", campaign.AdID).
 		Select()
 	if err != nil && err != pg.ErrNoRows {
@@ -21,7 +23,9 @@ func (repo *AdCampaignRepository) SaveOrUpdate(campaign *models.AdCampaign) erro
 
 	if err == pg.ErrNoRows {
 		// Рекламная кампания не найдена, создаем новую запись
-		_, err := repo.DB.Model(campaign).Insert()
+		_, err := repo.DB.Model(campaign).
+			Context(ctx).
+			Insert()
 		return err
 	}
 
@@ -43,25 +47,28 @@ func (repo *AdCampaignRepository) SaveOrUpdate(campaign *models.AdCampaign) erro
 	}
 
 	_, err = repo.DB.Model(campaign).
+		Context(ctx).
 		Column(columns...).
 		Where("ad_id = ?", campaign.AdID).
 		Update()
 	return err
 }
 
-func (repo *AdCampaignRepository) SaveOrUpdateBalance(balance *models.Balance) error {
+func (repo *AdCampaignRepository) SaveOrUpdateBalance(ctx context.Context, balance *models.Balance) error {
 	// Устанавливаем текущее время для updated_at перед выполнением запроса
 	balance.UpdatedAt = time.Now()
 	_, err := repo.DB.Model(balance).
+		Context(ctx).
 		OnConflict("(ad_id) DO UPDATE").
 		Set("balance = EXCLUDED.balance, updated_at = EXCLUDED.updated_at").
 		Insert()
 	return err
 }
 
-func (repo *AdCampaignRepository) GetAllIds() ([]int, error) {
+func (repo *AdCampaignRepository) GetAllIds(ctx context.Context) ([]int, error) {
 	var ids []int
 	err := repo.DB.Model(&models.AdCampaign{}).
+		Context(ctx).
 		Column("ad_id").
 		Select(&ids)
 	if err != nil {
@@ -72,7 +79,7 @@ func (repo *AdCampaignRepository) GetAllIds() ([]int, error) {
 
 // Оставил тут логику
 // Меньше 500, дневной бюджет не привышен, не помечен "непополнять"
-func (repo *AdCampaignRepository) GetReFillIds() ([]int, error) {
+func (repo *AdCampaignRepository) GetReFillIds(ctx context.Context) ([]int, error) {
 	var ids []int
 	query := `
         SELECT 
@@ -94,14 +101,16 @@ func (repo *AdCampaignRepository) GetReFillIds() ([]int, error) {
                     AND date = CURRENT_DATE
             );
     `
-	_, err := repo.DB.Query(&ids, query)
+	_, err := repo.DB.QueryContext(ctx, &ids, query)
 	if err != nil {
 		return nil, err
 	}
 	return ids, nil
 }
 
-func (repo *AdCampaignRepository) AddHistoryAmount(entry *models.History) error {
-	_, err := repo.DB.Model(entry).Insert()
+func (repo *AdCampaignRepository) AddHistoryAmount(ctx context.Context, entry *models.History) error {
+	_, err := repo.DB.Model(entry).
+		Context(ctx).
+		Insert()
 	return err
 }

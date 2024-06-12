@@ -9,23 +9,23 @@ import (
 
 type Task func(ctx context.Context) error
 
-// 20 минут тайм аут контекста, минута между повторами
-func Scheduler(task Task, interval time.Duration) {
+// 20 минут тайм аут контекста, 3 минуты между повторами
+func Add(task Task, interval time.Duration) {
+	slog.Info("scheduler start task")
 	ticker := time.NewTicker(interval)
 	defer ticker.Stop()
 
 	for {
-		select {
-		case <-ticker.C:
-			// Контекст прокинут до реквестов
-			ctx, cancel := context.WithTimeout(context.Background(), 20*time.Minute)
-			defer cancel()
+		// Контекст прокинут до реквестов и базы
+		ctx, cancel := context.WithTimeout(context.Background(), 20*time.Minute)
+		defer cancel()
 
-			retryJob(ctx,
-				task,
-				config.Get().Retries,
-				time.Minute)
-		}
+		retryJob(ctx,
+			task,
+			config.Get().Retries,
+			3*time.Minute) //TODO вынести в конфиг
+
+		<-ticker.C
 	}
 }
 
