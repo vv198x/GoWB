@@ -11,6 +11,10 @@ services:
       - USER_PG=pgsql
       - PASS_PG=${PASS_PGSQL}
       - KEY_AD=${AD_KEY}
+      - RETRIES=3
+      - RET_TIME=500
+      - RET_TIME_MINUTES=5
+      - AMOUNT=2000
     restart: always
     volumes:
       - ./log:/log

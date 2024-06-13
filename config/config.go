@@ -8,17 +8,18 @@ import (
 )
 
 type Config struct {
-	LogLevel    string `env:"LOGGER" env-default:"info" env-description:"LogLevel level"`
-	LogDir      string `env:"LOG_DIR" env-default:"log" env-description:"Directory for log"`
-	Migration   string `env:"MIGRATION" env-default:"up" env-description:"Migration level"`
-	AddrPg      string `env:"ADDR_PG" env-default:"127.0.0.1:5432" env-description:"Address of PostgreSQL"`
-	DbPg        string `env:"DB_PG" env-default:"wbgo" env-description:"PostgreSQL database name"`
-	UserPg      string `env:"USER_PG" env-default:"pgsql" env-description:"PostgreSQL user"`
-	PassPg      string `env:"PASS_PG" env-default:"PA$$" env-description:"PostgreSQL password"`
-	ApiKeyAD    string `env:"KEY_AD" env-default:"KEY" env-description:"PostgreSQL password"`
-	Retries     int    `env:"RETRIES" env-default:"3" env-description:"Retries"`
-	RetriesTime int    `env:"RET_TIME" env-default:"500" env-description:"Retries time milliseconds"`
-	Amount      int    `env:"AMOUNT" env-default:"2000" env-description:"Replenishment amount"`
+	LogLevel           string `env:"LOGGER" env-default:"info" env-description:"LogLevel level"`
+	LogDir             string `env:"LOG_DIR" env-default:"log" env-description:"Directory for log"`
+	Migration          string `env:"MIGRATION" env-default:"up" env-description:"Migration level"`
+	AddrPg             string `env:"ADDR_PG" env-default:"127.0.0.1:5432" env-description:"Address of PostgreSQL"`
+	DbPg               string `env:"DB_PG" env-default:"wbgo" env-description:"PostgreSQL database name"`
+	UserPg             string `env:"USER_PG" env-default:"pgsql" env-description:"PostgreSQL user"`
+	PassPg             string `env:"PASS_PG" env-default:"PA$$" env-description:"PostgreSQL password"`
+	ApiKeyAD           string `env:"KEY_AD" env-default:"KEY" env-description:"PostgreSQL password"`
+	Retries            int    `env:"RETRIES" env-default:"3" env-description:"Retries"`
+	RetriesTime        int    `env:"RET_TIME" env-default:"500" env-description:"Retries time milliseconds"`
+	RetriesTimeMinutes int    `env:"RET_TIME_MINUTES" env-default:"5" env-description:"Retries time minutes"`
+	Amount             int    `env:"AMOUNT" env-default:"2000" env-description:"Replenishment amount"`
 }
 
 var c Config

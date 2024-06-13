@@ -23,7 +23,7 @@ func Add(task Task, interval time.Duration) {
 		retryJob(ctx,
 			task,
 			config.Get().Retries,
-			3*time.Minute) //TODO вынести в конфиг
+			time.Duration(config.Get().RetriesTimeMinutes)*time.Minute)
 
 		<-ticker.C
 	}
