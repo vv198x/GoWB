@@ -9,7 +9,7 @@ import (
 
 type Task func(ctx context.Context) error
 
-// 20 минут тайм аут контекста, 3 минуты между повторами
+// 20 минут тайм аут контекста, 5 минут между повторами
 func Add(task Task, interval time.Duration) {
 	slog.Info("scheduler start task")
 	ticker := time.NewTicker(interval)
