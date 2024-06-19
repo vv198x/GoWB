@@ -15,7 +15,7 @@ func AutoReFill(ctx context.Context) error {
 	}
 
 	if err := ReFillBalance(ctx); err != nil {
-		return fmt.Errorf("UpdateBalance err ", err)
+		return fmt.Errorf("ReFillBalance err ", err)
 	}
 	//TODO - Запустить компании не помеченные DoNotRefill = false
 	return UpdateBalance(ctx)
