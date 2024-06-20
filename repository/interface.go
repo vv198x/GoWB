@@ -11,6 +11,9 @@ type AdCampaign interface {
 	SaveOrUpdateBalance(context.Context, *models.Balance) error
 	GetReFillIds(context.Context) ([]int, error)
 	AddHistoryAmount(context.Context, *models.History) error
+	GetAllAds(ctx context.Context) ([]models.AdCampaign, error)
+	GetAllRequests(ctx context.Context) ([]models.BidderRequest, error)
+	SaveOrUpdatePosition(ctx context.Context, position *models.Position) error
 }
 
 var R AdCampaign

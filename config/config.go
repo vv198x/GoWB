@@ -10,7 +10,7 @@ import (
 type Config struct {
 	LogLevel           string `env:"LOGGER" env-default:"info" env-description:"LogLevel level"`
 	LogDir             string `env:"LOG_DIR" env-default:"log" env-description:"Directory for log"`
-	Migration          string `env:"MIGRATION" env-default:"up" env-description:"Migration level"`
+	Migration          string `env:"MIGRATION" env-default:"" env-description:"Migration level"`
 	AddrPg             string `env:"ADDR_PG" env-default:"127.0.0.1:5432" env-description:"Address of PostgreSQL"`
 	DbPg               string `env:"DB_PG" env-default:"wbgo" env-description:"PostgreSQL database name"`
 	UserPg             string `env:"USER_PG" env-default:"pgsql" env-description:"PostgreSQL user"`

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/vv198x/GoWB/config"
 	"github.com/vv198x/GoWB/logger"
 	"github.com/vv198x/GoWB/repository"
@@ -35,5 +36,6 @@ func main() {
 		select {}
 	*/
 
-	tasks.GetPosition(context.Background(), "мощный жиросжигатель для женщин")
+	fmt.Println(tasks.CheckPositions(context.Background()))
+
 }

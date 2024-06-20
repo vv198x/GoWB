@@ -114,3 +114,11 @@ func (repo *AdCampaignRepository) AddHistoryAmount(ctx context.Context, entry *m
 		Insert()
 	return err
 }
+
+func (repo *AdCampaignRepository) GetAllAds(ctx context.Context) ([]models.AdCampaign, error) {
+	var ads []models.AdCampaign
+	err := repo.DB.Model(&ads).
+		Context(ctx).
+		Select()
+	return ads, err
+}

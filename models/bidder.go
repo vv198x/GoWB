@@ -13,12 +13,12 @@ type BidderList struct {
 	CurrentBid int       `pg:"current_bid"`
 	MaxBid     int       `pg:"max_bid"`
 	Paused     bool      `pg:"paused,default:false"`
-	CreatedAt  time.Time `pg:"created_at,default:now()"`
-	UpdatedAt  time.Time `pg:"updated_at"`
+	CreatedAt  time.Time `pg:"created_at"`
+	UpdatedAt  time.Time `pg:"updated_at,default:now()"`
 }
 
 type Position struct {
-	SKU       int64     `pg:"sku,pk"`
+	SKU       int64     `pg:"sku"`
 	RequestID int       `pg:"request_id,pk"`
 	Organic   int       `pg:"organic"`
 	Position  int       `pg:"position"`
