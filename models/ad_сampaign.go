@@ -11,6 +11,7 @@ type AdCampaign struct {
 	Status      int       `pg:"status"`
 	Type        int       `pg:"type"`
 	DoNotRefill bool      `pg:"do_not_refill"`
+	SKU         int64     `pg:"sku"`
 	CreatedAt   time.Time `pg:"created_at,default:now()"`
 	UpdatedAt   time.Time `pg:"updated_at"`
 }

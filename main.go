@@ -1,15 +1,14 @@
 package main
 
 import (
+	"context"
 	"github.com/vv198x/GoWB/config"
 	"github.com/vv198x/GoWB/logger"
 	"github.com/vv198x/GoWB/repository"
 	"github.com/vv198x/GoWB/repository/pgsql"
 	migrations "github.com/vv198x/GoWB/repository/pgsql/migration"
-	"github.com/vv198x/GoWB/scheduler"
 	"github.com/vv198x/GoWB/tasks"
 	"log/slog"
-	"time"
 )
 
 func main() {
@@ -27,8 +26,14 @@ func main() {
 	//инициализация репозитория
 	repository.R = &repository.AdCampaignRepository{DB: pgsql.DB}
 
-	go scheduler.Add(tasks.AutoReFill, 30*time.Minute)
-	go scheduler.Add(tasks.UpdateNames, 24*time.Hour)
+	/*
 
-	select {}
+
+		go scheduler.Add(tasks.AutoReFill, 30*time.Minute)
+		go scheduler.Add(tasks.UpdateNames, 24*time.Hour)
+
+		select {}
+	*/
+
+	tasks.GetPosition(context.Background(), "мощный жиросжигатель для женщин")
 }

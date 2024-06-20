@@ -33,22 +33,21 @@ func GetPosition(ctx context.Context, query string) error {
 
 	fmt.Println("Requst:", wbSearch.Metadata.Name)
 	fmt.Println("Total Products:", len(wbSearch.Data.Products))
-	/*
-		fmt.Println("-----------------")
-		for i, product := range wbSearch.Data.Products {
-			if product.Brand == "Livelyflow" {
-				fmt.Println("Product:", product.Name)
-				fmt.Println("SKU:", product.Id)
-				fmt.Println("CPM:", product.Log.Cpm)
-				fmt.Println("Position:", product.Log.Position)
-				fmt.Println("Promo Position:", product.Log.PromoPosition)
-				fmt.Println("Count Position:", i+1)
-				fmt.Println("-----------------")
-			}
 
+	fmt.Println("-----------------")
+	for i, product := range wbSearch.Data.Products {
+		if product.Brand == "Livelyflow" {
+			fmt.Println("Product:", product.Name)
+			fmt.Println("SKU:", product.Id)
+			fmt.Println("CPM:", product.Log.Cpm)
+			fmt.Println("Position:", product.Log.Position)
+			fmt.Println("Promo Position:", product.Log.PromoPosition)
+			fmt.Println("Count Position:", i+1)
+			fmt.Println("-----------------")
 		}
 
-	*/
+	}
+
 	// Глючное апи не всегда выдаёт log и 100 позиций
 	// если позиций меньше 50 не верить
 	// получить товары в компании в Апдейт
