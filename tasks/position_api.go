@@ -26,7 +26,7 @@ func CheckPositions(ctx context.Context) error {
 
 		sleepDuration := time.Duration(config.Get().RetriesTime) * time.Millisecond
 		// Удвоил количество попыток
-		for i := 0; i < config.Get().Retries*3; i++ {
+		for i := 0; i < config.Get().Retries*2; i++ {
 			time.Sleep(sleepDuration)
 			//удвоил время между попытками
 			sleepDuration *= 2
@@ -62,7 +62,7 @@ func GetPosition(ctx context.Context, query models.BidderRequest) error {
 	}
 
 	//Записать все продукты под брендом
-	fmt.Println(wbSearch.Metadata.Name)
+	fmt.Println(wbSearch.Metadata.Name, "", query.ID)
 	for i, product := range wbSearch.Data.Products {
 		if product.Brand == "Livelyflow" {
 			fmt.Println("Product:", product.Name)
@@ -72,14 +72,13 @@ func GetPosition(ctx context.Context, query models.BidderRequest) error {
 			fmt.Println("Promo Position:", product.Log.PromoPosition)
 			fmt.Println("Count Position:", i+1)
 			fmt.Println("-----------------")
-
 			if err := repository.Do().SaveOrUpdatePosition(ctx, &models.Position{
 				SKU:       int64(product.Id),
 				RequestID: query.ID,
 				Organic:   product.Log.Position,
 				Position:  i + 1,
 			}); err != nil {
-				return fmt.Errorf("db error saving position: %v", err)
+				slog.Error("db error saving position: %v", err)
 			}
 
 		}

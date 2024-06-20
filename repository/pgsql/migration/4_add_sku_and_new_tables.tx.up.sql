@@ -16,8 +16,7 @@ CREATE TABLE IF NOT EXISTS "positions" (
                                            "sku" BIGINT,
                                            "organic" INTEGER,
                                            "position" INTEGER,
-                                           "updated_at" TIMESTAMPTZ DEFAULT now(),
-                                           PRIMARY KEY ("request_id")
+                                           "updated_at" TIMESTAMPTZ DEFAULT now()
 );
 
 -- Создание таблицы positions

@@ -19,7 +19,7 @@ type BidderList struct {
 
 type Position struct {
 	SKU       int64     `pg:"sku"`
-	RequestID int       `pg:"request_id,pk"`
+	RequestID int       `pg:"request_id"`
 	Organic   int       `pg:"organic"`
 	Position  int       `pg:"position"`
 	UpdatedAt time.Time `pg:"updated_at,default:now()"`
