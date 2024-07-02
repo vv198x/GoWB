@@ -8,13 +8,12 @@ type BidderRequest struct {
 }
 
 type BidderList struct {
-	AdID       int64     `pg:"ad_id,pk"`
-	RequestID  int       `pg:"request_id,pk"`
-	CurrentBid int       `pg:"current_bid"`
-	MaxBid     int       `pg:"max_bid"`
-	Paused     bool      `pg:"paused,default:false"`
-	CreatedAt  time.Time `pg:"created_at"`
-	UpdatedAt  time.Time `pg:"updated_at,default:now()"`
+	AdID      int64     `pg:"ad_id,pk"`
+	RequestID int       `pg:"request_id,pk"`
+	MaxBid    int       `pg:"max_bid"`
+	Paused    bool      `pg:"paused,default:false"`
+	CreatedAt time.Time `pg:"created_at"`
+	UpdatedAt time.Time `pg:"updated_at,default:now()"`
 }
 
 type Position struct {

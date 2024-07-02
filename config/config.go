@@ -37,7 +37,7 @@ func init() {
 
 func IsHomeHost() bool {
 	hostname := GetHostName()
-	return (hostname == "fedora") || (hostname == "Olga") || (hostname == "boss")
+	return (hostname == "fedora") || (hostname == "boss")
 }
 
 func GetHostName() string {

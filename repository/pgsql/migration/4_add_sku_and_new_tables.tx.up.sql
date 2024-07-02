@@ -2,6 +2,7 @@
 
 -- Добавление нового поля sku в таблицу ad_campaigns
 ALTER TABLE "ad_campaigns"
+    ADD COLUMN "current_bid" INTEGER,
     ADD COLUMN "sku" BIGINT;
 
 -- Создание таблицы bidder_requests
@@ -23,7 +24,6 @@ CREATE TABLE IF NOT EXISTS "positions" (
 CREATE TABLE IF NOT EXISTS "bidder_lists" (
                                               "ad_id" BIGINT REFERENCES "ad_campaigns" ("ad_id") ON DELETE CASCADE,
                                               "request_id" INTEGER REFERENCES "bidder_requests" ("id"),
-                                              "current_bid" INTEGER,
                                               "max_bid" INTEGER,
                                               "paused" BOOLEAN DEFAULT FALSE,
                                               "created_at" TIMESTAMPTZ DEFAULT now(),

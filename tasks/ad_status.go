@@ -9,7 +9,6 @@ import (
 	"github.com/vv198x/GoWB/requests"
 	"log/slog"
 	"net/http"
-	"time"
 )
 
 const uriCount = "https://advert-api.wb.ru/adv/v1/promotion/count"
@@ -54,8 +53,6 @@ func GetAdList(ctx context.Context) error {
 }
 
 func UpdateNames(ctx context.Context) error {
-	//Ожидание если база пустая
-	time.Sleep(5 * time.Minute)
 
 	adIds, err := repository.Do().GetAllIds(ctx)
 	if err != nil {
@@ -71,27 +68,39 @@ func UpdateNames(ctx context.Context) error {
 		return fmt.Errorf("request ad status error: %v", err)
 	}
 
-	// Не стал создавать модель
-	var mapJ []map[string]interface{}
-	if err := json.Unmarshal(data, &mapJ); err != nil {
+	var campaigns []models.WBCampaign
+	if err := json.Unmarshal(data, &campaigns); err != nil {
 		return fmt.Errorf("JSON unmarshal error: %v", err)
 	}
 
-	for _, item := range mapJ {
-		//собираю из мапы данные
-		if name, ok := item["name"].(string); ok {
-			if id, ok := item["advertId"].(float64); ok {
-				if typeAd, ok := item["type"].(float64); ok {
-					//обновляю в базе
-					if err := repository.Do().SaveOrUpdate(ctx, &models.AdCampaign{
-						AdID: int(id),
-						Type: int(typeAd),
-						Name: name,
-					}); err != nil {
-						return fmt.Errorf("db error saving or updating campaign: %v", err)
-					}
-				}
+	for _, campaign := range campaigns {
+		var sku int64
+		var cpm int
+		switch {
+		case campaign.Type == models.TYPE_AUTO:
+			if len(campaign.AutoParams.Nms) > 0 {
+				sku = campaign.AutoParams.Nms[0]
 			}
+			cpm = campaign.AutoParams.Cpm
+
+		case campaign.Type == models.TYPE_SHEARCH:
+			if len(campaign.UnitedParams) > 0 {
+				if len(campaign.UnitedParams[0].Nms) > 0 {
+					sku = campaign.UnitedParams[0].Nms[0]
+				}
+				cpm = campaign.UnitedParams[0].SearchCPM
+
+			}
+		}
+
+		if err := repository.Do().SaveOrUpdate(ctx, &models.AdCampaign{
+			AdID:       campaign.AdvertId,
+			Type:       campaign.Type,
+			Name:       campaign.Name,
+			SKU:        sku,
+			CurrentBid: cpm,
+		}); err != nil {
+			return fmt.Errorf("db error saving or updating campaign: %v", err)
 		}
 	}
 

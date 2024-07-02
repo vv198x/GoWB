@@ -2,6 +2,7 @@
 
 -- Удаление нового поля sku из таблицы ad_campaigns
 ALTER TABLE "ad_campaigns"
+    DROP COLUMN "current_bid",
     DROP COLUMN "sku";
 
 -- Удаление таблицы positions

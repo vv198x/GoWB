@@ -12,6 +12,7 @@ type AdCampaign struct {
 	Type        int       `pg:"type"`
 	DoNotRefill bool      `pg:"do_not_refill"`
 	SKU         int64     `pg:"sku"`
+	CurrentBid  int       `pg:"current_bid"`
 	CreatedAt   time.Time `pg:"created_at,default:now()"`
 	UpdatedAt   time.Time `pg:"updated_at"`
 }
@@ -25,6 +26,8 @@ type Balance struct {
 
 // status
 const (
-	AD_PAUSE = 11
-	AD_RUN   = 9
+	AD_PAUSE     = 11
+	AD_RUN       = 9
+	TYPE_SHEARCH = 9
+	TYPE_AUTO    = 8
 )
