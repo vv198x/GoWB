@@ -20,4 +20,4 @@ func AutoReFill(ctx context.Context) error {
 	return UpdateBalance(ctx)
 }
 
-//TODO - Запустить компании не помеченные DoNotRefill = false
+//Запустить компании не помеченные DoNotRefill = false

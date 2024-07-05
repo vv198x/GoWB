@@ -75,13 +75,14 @@ func UpdateNames(ctx context.Context) error {
 
 	for _, campaign := range campaigns {
 		var sku int64
-		var cpm int
+		var cpm, subject int
 		switch {
 		case campaign.Type == models.TYPE_AUTO:
 			if len(campaign.AutoParams.Nms) > 0 {
 				sku = campaign.AutoParams.Nms[0]
 			}
 			cpm = campaign.AutoParams.Cpm
+			subject = campaign.AutoParams.Subject.Id
 
 		case campaign.Type == models.TYPE_SHEARCH:
 			if len(campaign.UnitedParams) > 0 {
@@ -89,6 +90,7 @@ func UpdateNames(ctx context.Context) error {
 					sku = campaign.UnitedParams[0].Nms[0]
 				}
 				cpm = campaign.UnitedParams[0].SearchCPM
+				subject = campaign.UnitedParams[0].Subject.Id
 
 			}
 		}
@@ -99,6 +101,7 @@ func UpdateNames(ctx context.Context) error {
 			Name:       campaign.Name,
 			SKU:        sku,
 			CurrentBid: cpm,
+			Subject:    subject,
 		}); err != nil {
 			return fmt.Errorf("db error saving or updating campaign: %v", err)
 		}

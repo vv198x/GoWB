@@ -1,7 +1,6 @@
 SELECT
     ac."name",
     br."request",
-    bl."current_bid",
     bl."max_bid",
     bl."paused"
 FROM

@@ -51,6 +51,9 @@ func (repo *AdCampaignRepository) SaveOrUpdate(ctx context.Context, campaign *mo
 	if campaign.CurrentBid != 0 {
 		columns = append(columns, "current_bid")
 	}
+	if campaign.Subject != 0 {
+		columns = append(columns, "subject")
+	}
 
 	_, err = repo.DB.Model(campaign).
 		Context(ctx).

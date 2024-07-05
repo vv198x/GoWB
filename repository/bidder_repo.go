@@ -58,8 +58,10 @@ func (repo *AdCampaignRepository) SaveOrUpdatePosition(ctx context.Context, posi
 func (repo *AdCampaignRepository) GetBidderInfoByAdID(ctx context.Context, adID int64) (models.BidderInfo, error) {
 	var bidderInfo models.BidderInfo
 	query := `
-      SELECT
+SELECT
     ac.current_bid,
+    ac.type,
+    ac.subject,
     bl.max_bid,
     bl.max_position,
     bl.paused,
@@ -80,14 +82,11 @@ FROM
         JOIN
     ad_campaigns ac ON ac.ad_id = bl.ad_id
         JOIN
-    positions p ON p.sku = ac.sku
+    positions p ON p.request_id = bl.request_id AND p.sku = ac.sku
 WHERE
     bl.ad_id = ?;
     `
 	_, err := repo.DB.QueryContext(ctx, &bidderInfo, query, adID)
-	if err != nil {
-		return bidderInfo, err
-	}
 
-	return bidderInfo, nil
+	return bidderInfo, err
 }

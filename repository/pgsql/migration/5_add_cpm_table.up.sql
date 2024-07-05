@@ -1,5 +1,9 @@
 -- 5_add_cpm_table.up.sql
 
+-- Добавление нового поля subject в таблицу ad_campaigns
+ALTER TABLE "ad_campaigns"
+    ADD COLUMN "subject" INTEGER;
+
 -- Создание таблицы
 CREATE TABLE IF NOT EXISTS "cpms" (
                                       "id" SERIAL PRIMARY KEY,
