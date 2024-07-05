@@ -46,8 +46,8 @@ func main() {
 
 	*/
 
-	//fmt.Println(tasks.UpdateNames(context.Background()))
+	fmt.Println(tasks.UpdateNames(context.Background()))
 	fmt.Println(tasks.CheckPositions(context.Background()))
-	fmt.Println(repository.Do().GetBidderInfoByAdID(context.Background(), 15375877))
+	fmt.Println(repository.Do().GetBidderInfoByAdID(context.Background(), 17182684))
 
 }

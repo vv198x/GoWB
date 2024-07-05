@@ -57,20 +57,35 @@ func (repo *AdCampaignRepository) SaveOrUpdatePosition(ctx context.Context, posi
 
 func (repo *AdCampaignRepository) GetBidderInfoByAdID(ctx context.Context, adID int64) (models.BidderInfo, error) {
 	var bidderInfo models.BidderInfo
-
-	subquery := repo.DB.Model((*models.Cpm)(nil)).
-		Context(ctx).
-		ColumnExpr("old_cpm").
-		Where("ad_id = ?", adID).
-		Order("created_at DESC").
-		Limit(1)
-
-	if err := repo.DB.Model((*models.BidderList)(nil)).
-		Context(ctx).
-		ColumnExpr("bidder_list.request_id, ad_campaign.current_bid, bidder_list.max_bid, bidder_list.paused, position.position, (?) AS old_cpm", subquery).
-		Join("JOIN positions AS position ON position.request_id = bidder_list.request_id").
-		Where("bidder_list.ad_id = ?", adID).
-		Select(&bidderInfo); err != nil {
+	query := `
+      SELECT
+    ac.current_bid,
+    bl.max_bid,
+    bl.max_position,
+    bl.paused,
+    p.position,
+    (
+        SELECT
+            c.old_cpm
+        FROM
+            cpms c
+        WHERE
+            c.ad_id = bl.ad_id
+        ORDER BY
+            c.created_at DESC
+        LIMIT 1
+    ) AS old_cpm
+FROM
+    bidder_lists bl
+        JOIN
+    ad_campaigns ac ON ac.ad_id = bl.ad_id
+        JOIN
+    positions p ON p.sku = ac.sku
+WHERE
+    bl.ad_id = ?;
+    `
+	_, err := repo.DB.QueryContext(ctx, &bidderInfo, query, adID)
+	if err != nil {
 		return bidderInfo, err
 	}
 
