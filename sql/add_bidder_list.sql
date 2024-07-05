@@ -1,7 +1,6 @@
-INSERT INTO "bidder_lists" ("ad_id", "request_id", "current_bid", "max_bid", "paused", "created_at", "updated_at")
+INSERT INTO "bidder_lists" ("ad_id", "request_id", "max_bid", "paused", "created_at", "updated_at")
 SELECT "ad_id",
        1 AS "request_id",
-       0 AS "current_bid",
        0 AS "max_bid",
        TRUE AS "paused",
        now() AS "created_at",

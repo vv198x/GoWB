@@ -35,6 +35,7 @@ func main() {
 
 			select {}
 		Высчитать шаг
+		проверить старую ставку и текущую если меньше на шаг значит не увеличилась
 		•	Если текущая позиция выше 10 (т.е. >10):
 		o	  Увеличьте ставку на заранее определенный шаг, чтобы улучшить позицию.
 		o	  Проверьте, не превышает ли новая ставка максимальную допустимую ставку. Если превышает, установите максимальную ставку.
@@ -45,6 +46,8 @@ func main() {
 
 	*/
 
-	fmt.Println(tasks.UpdateNames(context.Background()))
+	//fmt.Println(tasks.UpdateNames(context.Background()))
+	fmt.Println(tasks.CheckPositions(context.Background()))
+	fmt.Println(repository.Do().GetBidderInfoByAdID(context.Background(), 15375877))
 
 }

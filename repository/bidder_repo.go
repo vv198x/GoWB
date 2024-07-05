@@ -54,3 +54,25 @@ func (repo *AdCampaignRepository) SaveOrUpdatePosition(ctx context.Context, posi
 		Update()
 	return err
 }
+
+func (repo *AdCampaignRepository) GetBidderInfoByAdID(ctx context.Context, adID int64) (models.BidderInfo, error) {
+	var bidderInfo models.BidderInfo
+
+	subquery := repo.DB.Model((*models.Cpm)(nil)).
+		Context(ctx).
+		ColumnExpr("old_cpm").
+		Where("ad_id = ?", adID).
+		Order("created_at DESC").
+		Limit(1)
+
+	if err := repo.DB.Model((*models.BidderList)(nil)).
+		Context(ctx).
+		ColumnExpr("bidder_list.request_id, ad_campaign.current_bid, bidder_list.max_bid, bidder_list.paused, position.position, (?) AS old_cpm", subquery).
+		Join("JOIN positions AS position ON position.request_id = bidder_list.request_id").
+		Where("bidder_list.ad_id = ?", adID).
+		Select(&bidderInfo); err != nil {
+		return bidderInfo, err
+	}
+
+	return bidderInfo, nil
+}

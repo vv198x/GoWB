@@ -14,6 +14,7 @@ type AdCampaign interface {
 	GetAllAds(ctx context.Context) ([]models.AdCampaign, error)
 	GetAllRequests(ctx context.Context) ([]models.BidderRequest, error)
 	SaveOrUpdatePosition(ctx context.Context, position *models.Position) error
+	GetBidderInfoByAdID(ctx context.Context, adID int64) (models.BidderInfo, error)
 }
 
 var R AdCampaign

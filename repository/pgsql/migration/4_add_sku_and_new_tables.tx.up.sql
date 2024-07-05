@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS "bidder_lists" (
                                               "ad_id" BIGINT REFERENCES "ad_campaigns" ("ad_id") ON DELETE CASCADE,
                                               "request_id" INTEGER REFERENCES "bidder_requests" ("id"),
                                               "max_bid" INTEGER,
+                                              "max_position" INTEGER,
                                               "paused" BOOLEAN DEFAULT FALSE,
                                               "created_at" TIMESTAMPTZ DEFAULT now(),
                                               "updated_at" TIMESTAMPTZ DEFAULT now(),
