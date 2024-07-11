@@ -68,7 +68,7 @@ SELECT
     p.position,
     (
         SELECT
-            c.old_cpm
+            c.new_cpm
         FROM
             cpms c
         WHERE
@@ -89,4 +89,11 @@ WHERE
 	_, err := repo.DB.QueryContext(ctx, &bidderInfo, query, adID)
 
 	return bidderInfo, err
+}
+
+func (repo *AdCampaignRepository) SaveCpm(ctx context.Context, cpm *models.Cpm) error {
+	_, err := repo.DB.Model(cpm).
+		Context(ctx).
+		Insert()
+	return err
 }

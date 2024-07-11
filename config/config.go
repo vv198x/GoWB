@@ -20,6 +20,7 @@ type Config struct {
 	RetriesTime        int    `env:"RET_TIME" env-default:"500" env-description:"Retries time milliseconds"`
 	RetriesTimeMinutes int    `env:"RET_TIME_MINUTES" env-default:"5" env-description:"Retries time minutes"`
 	Amount             int    `env:"AMOUNT" env-default:"2000" env-description:"Replenishment amount"`
+	BidderStep         int    `env:"BIDDER_STEP" env-default:"25" env-description:"Bidder step"`
 }
 
 var c Config

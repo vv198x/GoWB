@@ -1,15 +1,15 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"github.com/vv198x/GoWB/config"
 	"github.com/vv198x/GoWB/logger"
 	"github.com/vv198x/GoWB/repository"
 	"github.com/vv198x/GoWB/repository/pgsql"
 	migrations "github.com/vv198x/GoWB/repository/pgsql/migration"
-	"github.com/vv198x/GoWB/scheduler"
 	"github.com/vv198x/GoWB/tasks"
 	"log/slog"
-	"time"
 )
 
 func main() {
@@ -30,7 +30,7 @@ func main() {
 	/*
 
 
-				go scheduler.Add(tasks.AutoReFill, 30*time.Minute)
+				go scheduler.Add(tasks.AutoReFill, 20*time.Minute)
 				go scheduler.Add(tasks.UpdateNames, 24*time.Hour)
 
 				select {}
@@ -47,13 +47,7 @@ func main() {
 
 		17182684
 		3468
-		{
-		  "advertId": 17182684,
-		  "type": 9,
-		  "cpm": 1350,
-		  "param": 3468,
-		  "instrument": 4
-		}
+		{ "advertId": 17182684, "type": 9, "cpm": 1350, "param": 3468, "instrument": 4	}
 
 		арк
 		17655713
@@ -69,15 +63,7 @@ func main() {
 		  "instrument": 4
 		}
 
-
-		fmt.Println(tasks.UpdateNames(context.Background()))
-		fmt.Println(tasks.CheckPositions(context.Background()))
-		fmt.Println(repository.Do().GetBidderInfoByAdID(context.Background(), 17182684))
 	*/
 
-	go scheduler.Add(tasks.AutoReFill, 20*time.Minute)
-	go scheduler.Add(tasks.UpdateNames, 24*time.Hour)
-
-	select {}
-
+	fmt.Println(tasks.Bidding(context.Background()))
 }
