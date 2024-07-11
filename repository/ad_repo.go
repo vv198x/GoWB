@@ -98,7 +98,7 @@ func (repo *AdCampaignRepository) GetReFillIds(ctx context.Context) ([]int, erro
         LEFT JOIN 
             balances b ON ac.ad_id = b.ad_id
         WHERE 
-            COALESCE(b.balance, 0) < 500
+            COALESCE(b.balance, 0) < 800
             AND ac.do_not_refill = FALSE
             AND ac.budget > (
                 SELECT 
