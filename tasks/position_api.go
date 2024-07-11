@@ -62,16 +62,10 @@ func GetPosition(ctx context.Context, query models.BidderRequest) error {
 	}
 
 	//Записать все продукты под брендом
-	fmt.Println(wbSearch.Metadata.Name, "", query.ID)
+
 	for i, product := range wbSearch.Data.Products {
-		if product.Brand == "Livelyflow" {
-			fmt.Println("Product:", product.Name)
-			fmt.Println("SKU:", product.Id)
-			fmt.Println("CPM:", product.Log.Cpm)
-			fmt.Println("Position:", product.Log.Position)
-			fmt.Println("Promo Position:", product.Log.PromoPosition)
-			fmt.Println("Count Position:", i+1)
-			fmt.Println("-----------------")
+		if product.Brand == "Livelyflow" { //TODO: вынести в конфиг
+
 			if err := repository.Do().SaveOrUpdatePosition(ctx, &models.Position{
 				SKU:       int64(product.Id),
 				RequestID: query.ID,

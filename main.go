@@ -1,15 +1,15 @@
 package main
 
 import (
-	"context"
-	"fmt"
 	"github.com/vv198x/GoWB/config"
 	"github.com/vv198x/GoWB/logger"
 	"github.com/vv198x/GoWB/repository"
 	"github.com/vv198x/GoWB/repository/pgsql"
 	migrations "github.com/vv198x/GoWB/repository/pgsql/migration"
+	"github.com/vv198x/GoWB/scheduler"
 	"github.com/vv198x/GoWB/tasks"
 	"log/slog"
+	"time"
 )
 
 func main() {
@@ -68,10 +68,16 @@ func main() {
 		  "param": 1103,
 		  "instrument": 4
 		}
+
+
+		fmt.Println(tasks.UpdateNames(context.Background()))
+		fmt.Println(tasks.CheckPositions(context.Background()))
+		fmt.Println(repository.Do().GetBidderInfoByAdID(context.Background(), 17182684))
 	*/
 
-	fmt.Println(tasks.UpdateNames(context.Background()))
-	fmt.Println(tasks.CheckPositions(context.Background()))
-	fmt.Println(repository.Do().GetBidderInfoByAdID(context.Background(), 17182684))
+	go scheduler.Add(tasks.AutoReFill, 20*time.Minute)
+	go scheduler.Add(tasks.UpdateNames, 24*time.Hour)
+
+	select {}
 
 }
