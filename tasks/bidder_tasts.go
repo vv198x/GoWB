@@ -76,11 +76,6 @@ func BiddingById(ctx context.Context, id int64) error {
 		return fmt.Errorf("request ad status error: %v", err)
 	}
 
-	fmt.Println(bidderInfo.CurrentBid, bidderInfo.Position, bidderInfo.MaxPosition)
-	fmt.Println(nextBid)
-	fmt.Println(reqBody)
-	fmt.Println("-----------------------------------------------------------")
-
 	return repository.Do().SaveCpm(ctx, &models.Cpm{
 		AdID:   id,
 		NewCpm: nextBid,

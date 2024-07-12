@@ -1,13 +1,12 @@
 package main
 
 import (
-	"context"
-	"fmt"
 	"github.com/vv198x/GoWB/config"
 	"github.com/vv198x/GoWB/logger"
 	"github.com/vv198x/GoWB/repository"
 	"github.com/vv198x/GoWB/repository/pgsql"
 	migrations "github.com/vv198x/GoWB/repository/pgsql/migration"
+	"github.com/vv198x/GoWB/scheduler"
 	"github.com/vv198x/GoWB/tasks"
 	"log/slog"
 	"time"
@@ -41,8 +40,9 @@ func main() {
 
 
 	*/
-	for {
-		fmt.Println(tasks.Bidding(context.Background()))
-		time.Sleep(3 * time.Minute)
-	}
+
+	go scheduler.Add(tasks.AutoReFill, 20*time.Minute)
+	go scheduler.Add(tasks.Bidding, 3*time.Minute)
+
+	select {}
 }
