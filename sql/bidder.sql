@@ -8,6 +8,10 @@ SELECT
        AND c.created_at >= NOW() - INTERVAL '24 hours')) AS avg_cpm,
     ac.current_bid,
     bl."max_bid",
+    ROUND((SELECT AVG(c."old_position")
+           FROM "cpms" c
+           WHERE c.ad_id = ac.ad_id
+             AND c.created_at >= NOW() - INTERVAL '24 hours')) AS avg_position,
     p."position",
     bl."max_position",
     bl."paused"
