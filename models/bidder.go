@@ -25,9 +25,10 @@ type Position struct {
 }
 
 type Cpm struct {
-	ID        int       `pg:"id,pk"`
-	AdID      int64     `pg:"ad_id"`
-	OldCpm    int       `pg:"old_cpm"`
-	NewCpm    int       `pg:"new_cpm"`
-	CreatedAt time.Time `pg:"created_at,default:now()"`
+	ID          int       `pg:"id,pk"`
+	AdID        int64     `pg:"ad_id"`
+	OldCpm      int       `pg:"old_cpm"`
+	NewCpm      int       `pg:"new_cpm"`
+	CreatedAt   time.Time `pg:"created_at,default:now()"`
+	OldPosition int       `pg:"old_position"`
 }

@@ -64,7 +64,7 @@ func GetPosition(ctx context.Context, query models.BidderRequest) error {
 	//Записать все продукты под брендом
 
 	for i, product := range wbSearch.Data.Products {
-		if product.Brand == "Livelyflow" { //TODO: вынести в конфиг
+		if product.Brand == config.Get().BrandName {
 
 			if err := repository.Do().SaveOrUpdatePosition(ctx, &models.Position{
 				SKU:       int64(product.Id),

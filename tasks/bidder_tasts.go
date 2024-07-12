@@ -64,7 +64,7 @@ func BiddingById(ctx context.Context, id int64) error {
 	if nextBid%100 == 0 {
 		nextBid += 8
 	}
-
+	//Если равны значит не поменялась
 	if nextBid == bidderInfo.OldCpm {
 		slog.Error("nextBid == bidderInfo.OldCpm", id)
 	}
@@ -82,8 +82,9 @@ func BiddingById(ctx context.Context, id int64) error {
 	}
 
 	return repository.Do().SaveCpm(ctx, &models.Cpm{
-		AdID:   id,
-		NewCpm: nextBid,
-		OldCpm: bidderInfo.CurrentBid,
+		AdID:        id,
+		NewCpm:      nextBid,
+		OldCpm:      bidderInfo.CurrentBid,
+		OldPosition: bidderInfo.Position,
 	})
 }
