@@ -27,20 +27,6 @@ func main() {
 	//инициализация репозитория
 	repository.R = &repository.AdCampaignRepository{DB: pgsql.DB}
 
-	/*
-
-
-			go scheduler.Add(tasks.AutoReFill, 20*time.Minute)
-			go scheduler.Add(tasks.UpdateNames, 24*time.Hour)
-
-			select {}
-
-		позицию в cpms добавить
-		авторекламу биддером
-
-
-	*/
-
 	go scheduler.Add(tasks.AutoReFill, 20*time.Minute)
 	go scheduler.Add(tasks.Bidding, 3*time.Minute)
 
