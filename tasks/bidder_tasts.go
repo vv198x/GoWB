@@ -60,6 +60,11 @@ func BiddingById(ctx context.Context, id int64) error {
 			nextBid = minBid
 		}
 	}
+	//Если ровное число добавить 8
+	if nextBid%100 == 0 {
+		nextBid += 8
+	}
+
 	if nextBid == bidderInfo.OldCpm {
 		slog.Error("nextBid == bidderInfo.OldCpm", id)
 	}
