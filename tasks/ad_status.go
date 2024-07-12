@@ -81,7 +81,9 @@ func UpdateNames(ctx context.Context) error {
 			if len(campaign.AutoParams.Nms) > 0 {
 				sku = campaign.AutoParams.Nms[0]
 			}
-			cpm = campaign.AutoParams.Cpm
+			if len(campaign.AutoParams.NmCPM) > 0 {
+				cpm = campaign.AutoParams.NmCPM[0].Cpm
+			}
 			subject = campaign.AutoParams.Subject.Id
 
 		case campaign.Type == models.TYPE_SHEARCH:

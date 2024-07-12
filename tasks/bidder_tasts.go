@@ -9,6 +9,7 @@ import (
 	"github.com/vv198x/GoWB/requests"
 	"log/slog"
 	"net/http"
+	"time"
 )
 
 const minBid = 150
@@ -22,11 +23,18 @@ func Bidding(ctx context.Context) error {
 		return fmt.Errorf("CheckPositions err: %v", err)
 	}
 
-	//
-	//получить id
-	//range для id если ошибка слог эррор
+	ids, err := repository.Do().GetAllIds(ctx)
+	if err != nil {
+		return fmt.Errorf("GetAllIds err: %v", err)
+	}
+	for _, id := range ids {
+		if err = BiddingById(ctx, int64(id)); err != nil {
+			slog.Error("BiddingById err: %v", err)
+		}
+		time.Sleep(time.Duration(config.Get().RetriesTime) * time.Millisecond)
+	}
 
-	return BiddingById(ctx, 17182684)
+	return err
 }
 
 func BiddingById(ctx context.Context, id int64) error {
@@ -34,9 +42,10 @@ func BiddingById(ctx context.Context, id int64) error {
 	if err != nil {
 		return fmt.Errorf("GetBidderInfoByAdID err: %v", err)
 	}
-	if bidderInfo.Paused || bidderInfo.Type == models.TYPE_AUTO {
+	if bidderInfo.Paused || bidderInfo.Type == models.TYPE_AUTO || bidderInfo.MaxPosition == 0 {
 		return nil
 	}
+
 	var nextBid int
 	step := config.Get().BidderStep
 
@@ -52,12 +61,10 @@ func BiddingById(ctx context.Context, id int64) error {
 		}
 	}
 	if nextBid == bidderInfo.OldCpm {
-		slog.Error("nextBid == bidderInfo.OldCpm")
-		return nil
+		slog.Error("nextBid == bidderInfo.OldCpm", id)
 	}
 
-	//{"advertId": 17182684, "type": 9, "cpm": 1350, "param": 3468, "instrument": 4}
-	reqBody := fmt.Sprintf(`{"advertId": %d, "type": %d, "cpm": %d, "param": %d, "instrument": 4}`,
+	reqBody := fmt.Sprintf(`{"advertId": %d, "type": %d, "cpm": %d, "param": %d, "instrument": 6}`,
 		id,
 		models.TYPE_SHEARCH,
 		nextBid,
@@ -69,9 +76,10 @@ func BiddingById(ctx context.Context, id int64) error {
 		return fmt.Errorf("request ad status error: %v", err)
 	}
 
-	fmt.Println(bidderInfo)
+	fmt.Println(bidderInfo.CurrentBid, bidderInfo.Position, bidderInfo.MaxPosition)
 	fmt.Println(nextBid)
 	fmt.Println(reqBody)
+	fmt.Println("-----------------------------------------------------------")
 
 	return repository.Do().SaveCpm(ctx, &models.Cpm{
 		AdID:   id,
