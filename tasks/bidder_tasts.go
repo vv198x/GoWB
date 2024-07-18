@@ -64,7 +64,11 @@ func BiddingById(ctx context.Context, id int64) error {
 	if nextBid%100 == 0 {
 		nextBid += 8
 	}
-	//Если равны значит не поменялась
+	//Если ставка больше максимальной или меньше минимальной
+	if nextBid >= bidderInfo.MaxBid+8 || nextBid <= minBid {
+		return nil
+	}
+	//Если равны значит не поменялась, веравно менять
 	if nextBid == bidderInfo.OldCpm {
 		slog.Error("nextBid == bidderInfo.OldCpm", id)
 	}

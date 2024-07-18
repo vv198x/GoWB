@@ -1,6 +1,6 @@
 SELECT
     ac.ad_id,
-    -- ac.sku,
+    ac.sku,
     ac."name",
     br."request",
     ROUND((SELECT AVG(c."new_cpm")
