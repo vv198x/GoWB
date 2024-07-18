@@ -45,10 +45,6 @@ func BiddingById(ctx context.Context, id int64) error {
 	if bidderInfo.Paused || bidderInfo.Type == models.TYPE_AUTO || bidderInfo.MaxPosition == 0 {
 		return nil
 	}
-	//Если текущая ставка больше максимальной или меньше минимальной
-	if bidderInfo.CurrentBid > bidderInfo.MaxBid || bidderInfo.CurrentBid <= minBid {
-		return nil
-	}
 
 	var nextBid int
 	step := config.Get().BidderStep
