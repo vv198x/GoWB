@@ -1,8 +1,8 @@
 SELECT
     ac.name,
-    br.request,
-    p.sku,
-    p.position
+    -- p.sku,
+    p.position,
+    br.request
 FROM
     bidder_requests br
         JOIN

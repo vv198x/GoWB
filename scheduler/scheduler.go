@@ -39,7 +39,7 @@ func retryJob(ctx context.Context, task Task, maxRetries int, retryInterval time
 		if i == maxRetries-1 {
 			slog.Error("task failed after maximum retries:", err)
 		} else {
-			slog.Debug("task failed, retrying in %s...\n", retryInterval)
+			slog.Debug("task failed, retrying in %s...", retryInterval)
 
 			// Ожидание или отмена по контексту.
 			select {

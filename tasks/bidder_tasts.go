@@ -70,7 +70,8 @@ func BiddingById(ctx context.Context, id int64) error {
 	}
 	//Если равны значит не поменялась, веравно менять
 	if nextBid == bidderInfo.OldCpm {
-		slog.Error("nextBid == bidderInfo.OldCpm", id)
+		//Больше информации дл отладки
+		slog.Error("nextBid = OldCpm", bidderInfo)
 	}
 
 	reqBody := fmt.Sprintf(`{"advertId": %d, "type": %d, "cpm": %d, "param": %d, "instrument": 6}`,

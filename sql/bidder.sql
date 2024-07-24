@@ -1,6 +1,6 @@
 SELECT
     ac.ad_id,
-    ac.sku,
+    -- ac.sku,
     ac."name",
     br."request",
     ROUND((SELECT AVG(c."new_cpm")
@@ -23,4 +23,6 @@ FROM
         JOIN
     "bidder_requests" br ON bl."request_id" = br."id"
         JOIN
-    positions p ON p.request_id = bl.request_id AND p.sku = ac.sku;
+    positions p ON p.request_id = bl.request_id AND p.sku = ac.sku
+ORDER BY position
+;

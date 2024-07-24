@@ -1,5 +1,7 @@
 SELECT
+    ac.ad_id,
     ac.name,
+    ac.current_bid,
     COALESCE(b.balance, 0) AS balance,
     CASE
         WHEN ac.status = 9 THEN 'RUN'
