@@ -70,7 +70,7 @@ func BiddingById(ctx context.Context, id int64) error {
 	if nextBid == bidderInfo.OldCpm {
 		//Больше информации дл отладки
 		slog.Error("nextBid = OldCpm", bidderInfo)
-		nextBid += 1
+		nextBid += 20
 	}
 
 	reqBody := fmt.Sprintf(`{"advertId": %d, "type": %d, "cpm": %d, "param": %d, "instrument": 6}`,
