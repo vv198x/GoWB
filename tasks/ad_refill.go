@@ -7,6 +7,7 @@ import (
 	"github.com/vv198x/GoWB/models"
 	"github.com/vv198x/GoWB/repository"
 	"github.com/vv198x/GoWB/requests"
+	"log/slog"
 	"net/http"
 	"time"
 )
@@ -31,6 +32,7 @@ func ReFillBalance(ctx context.Context) error {
 func reFill(ctx context.Context, adId int) error {
 	finalURL := fmt.Sprintf("%s?id=%d", uriReFill, adId)
 	reqBody := fmt.Sprintf(`{"sum": %d,  "type": 1, "return": false}`, config.Get().Amount)
+	slog.Debug("request refill", finalURL, reqBody)
 
 	_, err := requests.New(http.MethodPost, finalURL, []byte(reqBody)).DoWithRetries(ctx)
 	if err != nil {
@@ -47,3 +49,5 @@ func reFill(ctx context.Context, adId int) error {
 
 	return err
 }
+
+//Запустить компании не помеченные DoNotRefill = false

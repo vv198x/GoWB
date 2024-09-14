@@ -1,4 +1,5 @@
 SELECT
+    ac.ad_id,
     ac.name,
     -- p.sku,
     p.position,

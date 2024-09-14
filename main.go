@@ -21,7 +21,7 @@ func main() {
 		panic("Dont connect pgsql")
 	}
 	//логирование запросов если логлевел дебаг
-	pgsql.DebugPG()
+	//pgsql.DebugPG()
 	//миграция
 	migrations.Start()
 	//инициализация репозитория
@@ -29,7 +29,7 @@ func main() {
 
 	//планировщик
 	go scheduler.Add(tasks.AutoReFill, 20*time.Minute)
-	//go scheduler.Add(tasks.Bidding, 4*time.Minute)
+	go scheduler.Add(tasks.Bidding, 5*time.Minute)
 
 	select {}
 }
