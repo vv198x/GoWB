@@ -60,18 +60,17 @@ func BiddingById(ctx context.Context, id int64) error {
 			nextBid = minBid
 		}
 	}
+
 	//Если ровное число добавить 8
 	if nextBid%100 == 0 {
 		nextBid += 8
 	}
-	//Если ставка больше максимальной или меньше минимальной
-	if nextBid >= bidderInfo.MaxBid+8 || nextBid <= minBid {
-		return nil
-	}
-	//Если равны значит не поменялась, веравно менять
+
+	//Если равны значит не поменялась
 	if nextBid == bidderInfo.OldCpm {
 		//Больше информации дл отладки
 		slog.Error("nextBid = OldCpm", bidderInfo)
+		nextBid += 1
 	}
 
 	reqBody := fmt.Sprintf(`{"advertId": %d, "type": %d, "cpm": %d, "param": %d, "instrument": 6}`,
