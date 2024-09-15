@@ -49,6 +49,10 @@ func BiddingById(ctx context.Context, id int64) error {
 	var nextBid int
 	step := config.Get().BidderStep
 
+	//TODO заглушка если не даёт настоящие ставки
+	slog.Debug("bidderInfo: ", bidderInfo)
+	bidderInfo.CurrentBid = bidderInfo.OldCpm
+
 	if bidderInfo.Position > bidderInfo.MaxPosition {
 		nextBid = bidderInfo.CurrentBid + step
 		if nextBid > bidderInfo.MaxBid {

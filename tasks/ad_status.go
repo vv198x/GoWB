@@ -38,7 +38,7 @@ func GetAdList(ctx context.Context) error {
 					AdID:   advertList.AdvertId,
 					Status: advert.Status,
 				}); err != nil {
-					return fmt.Errorf("write db err ", err, err)
+					return fmt.Errorf("write db err ", err)
 				}
 			}
 		}
@@ -96,6 +96,7 @@ func UpdateNames(ctx context.Context) error {
 
 			}
 		}
+		slog.Debug("cpm", cpm, "campaign.Name", campaign.Name)
 
 		if err := repository.Do().SaveOrUpdate(ctx, &models.AdCampaign{
 			AdID:       campaign.AdvertId,
