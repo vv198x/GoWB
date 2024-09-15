@@ -17,7 +17,7 @@ type Config struct {
 	PassPg             string `env:"PASS_PG" env-default:"PA$$" env-description:"PostgreSQL password"`
 	ApiKeyAD           string `env:"KEY_AD" env-default:"KEY" env-description:"PostgreSQL password"`
 	Retries            int    `env:"RETRIES" env-default:"3" env-description:"Retries"`
-	RetriesTime        int    `env:"RET_TIME" env-default:"500" env-description:"Retries time milliseconds"`
+	RetriesTime        int    `env:"RET_TIME" env-default:"800" env-description:"Retries time milliseconds"`
 	RetriesTimeMinutes int    `env:"RET_TIME_MINUTES" env-default:"5" env-description:"Retries time minutes"`
 	Amount             int    `env:"AMOUNT" env-default:"2000" env-description:"Replenishment amount"`
 	BidderStep         int    `env:"BIDDER_STEP" env-default:"38" env-description:"Bidder step"`
