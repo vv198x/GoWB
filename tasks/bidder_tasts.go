@@ -49,8 +49,11 @@ func BiddingById(ctx context.Context, id int64) error {
 	var nextBid int
 	step := config.Get().BidderStep
 
-	//TODO заглушка если не даёт настоящие ставки
+	//заглушка если не даёт настоящие ставки берём прошлую
 	slog.Debug("bidderInfo: ", bidderInfo)
+	if bidderInfo.OldCpm < minBid {
+		bidderInfo.OldCpm = minBid
+	}
 	bidderInfo.CurrentBid = bidderInfo.OldCpm
 
 	if bidderInfo.Position > bidderInfo.MaxPosition {
@@ -70,24 +73,28 @@ func BiddingById(ctx context.Context, id int64) error {
 		nextBid += 8
 	}
 
-	//Если равны значит не поменялась
+	//Сечас если не поменялась ставка значит максимальная
 	if nextBid == bidderInfo.OldCpm {
-		//Больше информации дл отладки
-		slog.Error("nextBid = OldCpm", bidderInfo)
-		nextBid += 20
+		//Нужно если WB показывает всегда правильные ставки
+		slog.Debug("nextBid = OldCpm", bidderInfo)
+		nextBid += 8
 	}
 
-	reqBody := fmt.Sprintf(`{"advertId": %d, "type": %d, "cpm": %d, "param": %d, "instrument": 6}`,
-		id,
-		models.TYPE_SHEARCH,
-		nextBid,
-		bidderInfo.Subject,
-	)
-
-	_, err = requests.New(http.MethodPost, uriCPM, []byte(reqBody)).DoWithRetries(ctx)
+	//Получаю айди АРК по айди поиска и синхронизирую ставку
+	autoId, err := repository.Do().GetAutoId(ctx, id)
 	if err != nil {
-		return fmt.Errorf("request ad status error: %v", err)
+		return fmt.Errorf("GetAutoId err: %v", err)
 	}
+	if autoId > 0 {
+		if err2 := SetCPM(ctx, autoId, models.TYPE_AUTO, nextBid, bidderInfo); err2 != nil {
+			slog.Error("SetCPM AutoId err: %v", err2)
+		}
+	}
+
+	if err = SetCPM(ctx, id, models.TYPE_SHEARCH, nextBid, bidderInfo); err != nil {
+		slog.Error("SetCPM err: %v", err)
+	}
+	slog.Debug("bidder AUTO and SHEARCH: ", autoId, id)
 
 	return repository.Do().SaveCpm(ctx, &models.Cpm{
 		AdID:        id,
@@ -95,4 +102,19 @@ func BiddingById(ctx context.Context, id int64) error {
 		OldCpm:      bidderInfo.CurrentBid,
 		OldPosition: bidderInfo.Position,
 	})
+}
+
+func SetCPM(ctx context.Context, id int64, typeAd int, nextBid int, bidderInfo models.BidderInfo) error {
+	reqBody := fmt.Sprintf(`{"advertId": %d, "type": %d, "cpm": %d, "param": %d, "instrument": 6}`,
+		id,
+		typeAd,
+		nextBid,
+		bidderInfo.Subject,
+	)
+
+	_, err := requests.New(http.MethodPost, uriCPM, []byte(reqBody)).DoWithRetries(ctx)
+	if err != nil {
+		return fmt.Errorf("request ad status error: %v", err)
+	}
+	return nil
 }

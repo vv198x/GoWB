@@ -97,3 +97,25 @@ func (repo *AdCampaignRepository) SaveCpm(ctx context.Context, cpm *models.Cpm) 
 		Insert()
 	return err
 }
+
+func (repo *AdCampaignRepository) GetAutoId(ctx context.Context, adID int64) (int64, error) {
+	var id int64
+	subQuery := repo.DB.Model((*models.AdCampaign)(nil)).
+		Column("sku").
+		Where("ad_id = ?", adID)
+
+	err := repo.DB.Model((*models.AdCampaign)(nil)).
+		Context(ctx).
+		Column("ad_id").
+		Where("type = ?", models.TYPE_AUTO).
+		Where("sku = (?)", subQuery).
+		Select(&id)
+
+	if err != nil {
+		if err == pg.ErrNoRows {
+			return 0, nil // Возвращаем 0, если запись не найдена
+		}
+		return 0, err
+	}
+	return id, nil
+}

@@ -96,7 +96,6 @@ func UpdateNames(ctx context.Context) error {
 
 			}
 		}
-		slog.Debug("cpm", cpm, "campaign.Name", campaign.Name)
 
 		if err := repository.Do().SaveOrUpdate(ctx, &models.AdCampaign{
 			AdID:       campaign.AdvertId,
