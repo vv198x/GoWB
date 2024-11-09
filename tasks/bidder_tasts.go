@@ -8,6 +8,7 @@ import (
 	"github.com/vv198x/GoWB/repository"
 	"github.com/vv198x/GoWB/requests"
 	"log/slog"
+	"math"
 	"net/http"
 	"time"
 )
@@ -56,6 +57,15 @@ func BiddingById(ctx context.Context, id int64) error {
 	}
 	bidderInfo.CurrentBid = bidderInfo.OldCpm
 
+	//Если долеко то можно увеличить шаг
+	positionDiff := bidderInfo.Position - bidderInfo.MaxPosition
+	if math.Abs(float64(positionDiff)) > 3 {
+		step = step * 5
+	} else if math.Abs(float64(positionDiff)) > 1 {
+		step = step * 3
+	}
+
+	//Биддер
 	if bidderInfo.Position > bidderInfo.MaxPosition {
 		nextBid = bidderInfo.CurrentBid + step
 		if nextBid > bidderInfo.MaxBid {
@@ -89,6 +99,7 @@ func BiddingById(ctx context.Context, id int64) error {
 		if err2 := SetCPM(ctx, autoId, models.TYPE_AUTO, nextBid, bidderInfo); err2 != nil {
 			slog.Error("SetCPM AutoId err: %v", err2)
 		}
+		time.Sleep(time.Duration(config.Get().RetriesTime) * time.Millisecond)
 	}
 
 	if err = SetCPM(ctx, id, models.TYPE_SHEARCH, nextBid, bidderInfo); err != nil {
