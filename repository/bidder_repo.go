@@ -119,3 +119,30 @@ func (repo *AdCampaignRepository) GetAutoId(ctx context.Context, adID int64) (in
 	}
 	return id, nil
 }
+func (repo *AdCampaignRepository) GetAverageBid(ctx context.Context, adID int64, hours int) (int, error) {
+	var averageBid float64
+
+	err := repo.DB.Model((*models.Cpm)(nil)).
+		Context(ctx).
+		ColumnExpr("COALESCE(AVG(new_cpm), 0) AS avg_bid").
+		Where("ad_id = ?", adID).
+		Where("created_at > NOW() - INTERVAL '? hours'", hours).
+		Select(&averageBid)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return int(averageBid), nil
+}
+
+func (repo *AdCampaignRepository) UpdateMaxPosition(ctx context.Context, adID int64, newMaxPosition int) error {
+	_, err := repo.DB.Model(&models.BidderList{}).
+		Context(ctx).
+		Set("max_position = ?", newMaxPosition).
+		Set("updated_at = now()").
+		Where("ad_id = ?", adID).
+		Update()
+
+	return err
+}

@@ -78,16 +78,16 @@ func BiddingById(ctx context.Context, id int64) error {
 		}
 	}
 
-	//Если ровное число добавить 8
+	//Если ровное число добавить шаг
 	if nextBid%100 == 0 {
-		nextBid += 8
+		nextBid += config.Get().BidderStep
 	}
 
 	//Сечас если не поменялась ставка значит максимальная
 	if nextBid == bidderInfo.OldCpm {
 		//Нужно если WB показывает всегда правильные ставки
 		slog.Debug("nextBid = OldCpm", bidderInfo)
-		nextBid += 8
+		nextBid += config.Get().BidderStep
 	}
 
 	//Получаю айди АРК по айди поиска и синхронизирую ставку

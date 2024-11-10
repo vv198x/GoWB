@@ -30,6 +30,7 @@ func main() {
 	//планировщик
 	go scheduler.Add(tasks.AutoReFill, 20*time.Minute)
 	go scheduler.Add(tasks.Bidding, 5*time.Minute)
+	go scheduler.Add(tasks.ChoiceMaxPosition, 1*time.Hour)
 
 	select {}
 }

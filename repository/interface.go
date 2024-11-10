@@ -17,6 +17,8 @@ type AdCampaign interface {
 	GetBidderInfoByAdID(ctx context.Context, adID int64) (models.BidderInfo, error)
 	SaveCpm(ctx context.Context, cpm *models.Cpm) error
 	GetAutoId(ctx context.Context, adID int64) (int64, error)
+	GetAverageBid(ctx context.Context, adID int64, hours int) (int, error)
+	UpdateMaxPosition(ctx context.Context, adID int64, newMaxPosition int) error
 }
 
 var R AdCampaign

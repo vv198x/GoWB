@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS "bidder_requests" (
                                                  "request" TEXT
 );
 
--- Создание таблицы bidder_lists
+-- Создание таблицы
 CREATE TABLE IF NOT EXISTS "positions" (
                                            "request_id" INTEGER REFERENCES "bidder_requests" ("id") ON DELETE CASCADE,
                                            "sku" BIGINT,
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS "positions" (
                                            "updated_at" TIMESTAMPTZ DEFAULT now()
 );
 
--- Создание таблицы positions
+-- Создание таблицы
 CREATE TABLE IF NOT EXISTS "bidder_lists" (
                                               "ad_id" BIGINT REFERENCES "ad_campaigns" ("ad_id") ON DELETE CASCADE,
                                               "request_id" INTEGER REFERENCES "bidder_requests" ("id"),
