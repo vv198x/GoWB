@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/vv198x/GoWB/config"
 	"io/ioutil"
+	"log/slog"
 	"net/http"
 	"time"
 )
@@ -26,6 +27,7 @@ func New(method, uri string, data []byte) *Request {
 
 func (r *Request) Do(ctx context.Context) ([]byte, error) {
 	client := &http.Client{Timeout: time.Second * 60}
+	slog.Debug("request", r.Method, r.URI, string(r.Data))
 
 	req, err := http.NewRequestWithContext(ctx, r.Method, r.URI, bytes.NewBuffer(r.Data))
 	if err != nil {
