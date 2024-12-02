@@ -4,7 +4,7 @@ services:
     hostname: ${HOSTNAME}
     build: .
     environment:
-      - LOGGER=info
+      - LOGGER=debug
       - MIGRATION=
       - ADDR_PG=${ADDR_PGSQL}
       - DB_PG=wbgo
