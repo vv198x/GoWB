@@ -1,6 +1,6 @@
 select cpms.ad_id, cpms.old_cpm, cpms.new_cpm, cpms.old_position, cpms.created_at
 from cpms
-where cpms.created_at > now() - interval '24 hours' and cpms.ad_id = 17182914
+where cpms.created_at > now() - interval '24 hours' and cpms.ad_id = 17182684
 order by created_at desc
 
 -- 17182684 лкар ап 150 а там

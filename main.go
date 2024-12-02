@@ -21,7 +21,7 @@ func main() {
 		panic("Dont connect pgsql")
 	}
 	//логирование запросов если логлевел дебаг
-	//pgsql.DebugPG()
+	pgsql.DebugPG()
 	//миграция
 	migrations.Start()
 	//инициализация репозитория

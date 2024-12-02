@@ -11,7 +11,7 @@ import (
 )
 
 const factorStep = 3
-const factorBid = 50
+const factorBid = 65
 
 func ChoiceMaxPosition(ctx context.Context) error {
 	ids, err := repository.Do().GetAllIds(ctx)
@@ -52,19 +52,17 @@ func ChoiceAndSetPositionById(ctx context.Context, id int64) error {
 		maxPosition += 1
 	}
 
-	//Увеличить позицию если если меньше 50% (factorBid)
+	//Увеличить позицию если средняя ставка меньше 65% (factorBid)
 	if avgBid < (bidderInfo.MaxBid * factorBid / 100) {
 		maxPosition -= 1
 	}
 
 	//Установить если отличется
 	if maxPosition != bidderInfo.MaxPosition {
-
 		err = repository.Do().UpdateMaxPosition(ctx, id, maxPosition)
 		if err != nil {
 			return fmt.Errorf("UpdateMaxPosition err: %w", err)
 		}
-
 		slog.Debug("Position updated", "adID", id, "newMaxPosition", maxPosition)
 	}
 	return err

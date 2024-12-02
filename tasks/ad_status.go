@@ -23,7 +23,7 @@ func GetAdList(ctx context.Context) error {
 		if err = json.Unmarshal(data, &listAd); err != nil {
 			return fmt.Errorf("json error %V", err)
 		}
-		slog.Debug("send ad count")
+		slog.Debug("send ad count", listAd)
 	} else {
 		return fmt.Errorf("Request ad count error %V", err)
 	}
